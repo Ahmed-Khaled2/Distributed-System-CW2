@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Subscriber;
 
-/**
- *
- * @author gosta
- */
-public class SubscriberInterface {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface SubscriberInterface extends Remote{
+    public void receiveNotification(String msg) throws RemoteException;
     
 }

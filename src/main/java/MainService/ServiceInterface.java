@@ -1,5 +1,7 @@
 package MainService;
 
-public class ServiceInterface {
+import java.rmi.Remote;
+
+public interface ServiceInterface extends Remote {
     
 }
