@@ -16,17 +16,14 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
     public SubscriberMainGUI() {
         initComponents();
-        
+
     }
 
     public SubscriberMainGUI(ServiceInterface obj, SubscriberInterface Sub) throws RemoteException {
-
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
-            ex.printStackTrace();
         }
-
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
@@ -94,7 +91,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         NotificationsArea = new javax.swing.JTextArea();
         BackButton = new javax.swing.JButton();
         ThankYouMessage = new javax.swing.JLabel();
-        RefreshButton = new javax.swing.JButton();
+        Refresh = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         AvailablePublishers = new javax.swing.JList<>();
 
@@ -154,10 +151,10 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         ThankYouMessage.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ThankYouMessage.setText("Thank you for using our notification system, Ahmed!");
 
-        RefreshButton.setText("Refresh Notifications");
-        RefreshButton.addActionListener(new java.awt.event.ActionListener() {
+        Refresh.setText("Refresh");
+        Refresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RefreshButtonActionPerformed(evt);
+                RefreshActionPerformed(evt);
             }
         });
 
@@ -198,7 +195,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(RefreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Refresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(BackButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,7 +235,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(RefreshButton)
+                        .addComponent(Refresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BackButton))
                     .addGroup(layout.createSequentialGroup()
@@ -281,25 +278,28 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
     private void AvailablePublishersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AvailablePublishersMouseClicked
         String Selected = AvailablePublishers.getSelectedValue();
-         int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
-         if (choice == JOptionPane.YES_OPTION) {
-             for (int i = 0; i < availablePublishers.size(); i++) {
-                 try {
-                     if (availablePublishers.get(i).getName().equals(Selected)) {
-                         obj.subscribe(Sub, availablePublishers.get(i));
-                         JOptionPane.showMessageDialog(this, "You are now subscribed to " + Selected);
-                         updateGUI();
-                         break;
-                     }
-                 } catch (RemoteException ex) {
-                 }
-             }
-         }
+        int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            for (int i = 0; i < availablePublishers.size(); i++) {
+                try {
+                    if (availablePublishers.get(i).getName().equals(Selected)) {
+                        obj.subscribe(Sub, availablePublishers.get(i));
+                        JOptionPane.showMessageDialog(this, "You are now subscribed to " + Selected);
+                        updateGUI();
+                        break;
+                    }
+                } catch (RemoteException ex) {
+                }
+            }
+        }
     }//GEN-LAST:event_AvailablePublishersMouseClicked
 
-    private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
-        updateNotifications();
-    }//GEN-LAST:event_RefreshButtonActionPerformed
+    private void RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshActionPerformed
+        try {
+            updateGUI();
+        } catch (RemoteException ex) {
+        }
+    }//GEN-LAST:event_RefreshActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -321,7 +321,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane NotificationsAreaScroll;
     private javax.swing.JLabel PublishersSubTitle;
     private javax.swing.JLabel PublishersTitle;
-    private javax.swing.JButton RefreshButton;
+    private javax.swing.JButton Refresh;
     private javax.swing.JLabel ThankYouMessage;
     private javax.swing.JSeparator VerticalLine;
     private javax.swing.JScrollPane jScrollPane1;

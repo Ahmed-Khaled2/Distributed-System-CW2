@@ -9,6 +9,10 @@ import javax.swing.JOptionPane;
 public class SubscriberWelcomeGUI extends javax.swing.JFrame {
 
     public SubscriberWelcomeGUI() {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);

@@ -10,6 +10,10 @@ import javax.swing.JOptionPane;
 public class PublisherWelcomeGUI extends javax.swing.JFrame {
 
     public PublisherWelcomeGUI() {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);

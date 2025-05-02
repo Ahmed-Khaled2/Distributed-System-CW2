@@ -17,6 +17,10 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     }
 
     public PublisherMainGUI(ServiceInterface obj, PublisherInterface Pub) throws RemoteException {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);

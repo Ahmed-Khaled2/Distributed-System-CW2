@@ -9,6 +9,11 @@ public class MainService {
         ServiceImplementation service = new ServiceImplementation();
         Registry r = LocateRegistry.createRegistry(1099);
         r.bind("NotificationSystem", service);
+        
+        ServiceConsoleGUI SCGUI = new ServiceConsoleGUI(service);
+        service.setGUI(SCGUI);
+        SCGUI.setVisible(true);
+        
         System.out.println("System Started!");
     }
 }

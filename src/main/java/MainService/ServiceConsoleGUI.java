@@ -1,10 +1,64 @@
 package MainService;
 
+import Publisher.PublisherInterface;
+import Subscriber.SubscriberInterface;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 public class ServiceConsoleGUI extends javax.swing.JFrame {
+
+    private ServiceImplementation ServiceImp;
+    private ArrayList<SubscriberInterface> Subscribers;
+    private ArrayList<PublisherInterface> Publishers;
 
     public ServiceConsoleGUI() {
         initComponents();
+    }
+
+    public ServiceConsoleGUI(ServiceImplementation ServiceImp) throws RemoteException {
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
+        initComponents();
+        setLocationRelativeTo(null);
         setResizable(false);
+        this.ServiceImp = ServiceImp;
+        updateGUI();
+    }
+
+    public void updateGUI() throws RemoteException {
+        UpdateList();
+        UpdateUserTable();
+        UpdatePublisherTable();
+    }
+
+    public void UpdateList() throws RemoteException {
+        this.Subscribers = ServiceImp.getSubscribers();
+        this.Publishers = ServiceImp.getPublishers();
+    }
+
+    public void UpdateUserTable() throws RemoteException {
+        DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
+        model.setRowCount(0);
+
+        for (int i = 0; i < Subscribers.size(); i++) {
+            String Name = Subscribers.get(i).getName();
+            int ID = Subscribers.get(i).getId();
+            model.addRow(new Object[]{Name, ID});
+        }
+    }
+
+    public void UpdatePublisherTable() throws RemoteException {
+        DefaultTableModel model = (DefaultTableModel) PublishersTable.getModel();
+        model.setRowCount(0);
+
+        for (int i = 0; i < Publishers.size(); i++) {
+            String Name = Publishers.get(i).getName();
+            int NumberOfSubscribers = ServiceImp.getNumberOfSubscribers(Publishers.get(i).getName());
+            model.addRow(new Object[]{Name, NumberOfSubscribers});
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -12,18 +66,18 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        PublishersTable = new javax.swing.JTable();
+        UsersTableScroll = new javax.swing.JScrollPane();
+        UsersTable = new javax.swing.JTable();
+        PublisherTitle = new javax.swing.JLabel();
+        ServiceTitle = new javax.swing.JLabel();
+        UsersTitle = new javax.swing.JLabel();
+        UsersSubTitle = new javax.swing.JLabel();
+        PublisherSubTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        PublishersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -38,7 +92,7 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -49,20 +103,23 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        PublishersTable.setColumnSelectionAllowed(true);
+        PublishersTable.getTableHeader().setReorderingAllowed(false);
+        PublishersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PublishersTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(PublishersTable);
+        PublishersTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (PublishersTable.getColumnModel().getColumnCount() > 0) {
+            PublishersTable.getColumnModel().getColumn(0).setResizable(false);
+            PublishersTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        UsersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "Name", "ID"
@@ -72,7 +129,7 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -83,79 +140,107 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
-        jTable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setResizable(false);
+        UsersTable.setColumnSelectionAllowed(true);
+        UsersTable.getTableHeader().setReorderingAllowed(false);
+        UsersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                UsersTableMouseClicked(evt);
+            }
+        });
+        UsersTableScroll.setViewportView(UsersTable);
+        UsersTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        if (UsersTable.getColumnModel().getColumnCount() > 0) {
+            UsersTable.getColumnModel().getColumn(0).setResizable(false);
+            UsersTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("Avaliable Publishers");
+        PublisherTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        PublisherTitle.setText("Avaliable Publishers");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setText("Server Console");
+        ServiceTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        ServiceTitle.setText("Service Console");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setText("Avaliable Users");
+        UsersTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        UsersTitle.setText("Avaliable Users");
 
-        jLabel4.setText("Click on a user to get more details about them");
+        UsersSubTitle.setText("Click on a user to get more details about them");
 
-        jLabel5.setText("Click on a publisher to get more details about them");
+        PublisherSubTitle.setText("Click on a publisher to get more details about them");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(UsersTableScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(UsersTitle))
+                            .addComponent(UsersSubTitle))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(PublisherTitle)
+                                .addGap(16, 16, 16))
+                            .addComponent(PublisherSubTitle, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGap(30, 30, 30))
             .addGroup(layout.createSequentialGroup()
-                .addGap(291, 291, 291)
-                .addComponent(jLabel2)
+                .addGap(220, 220, 220)
+                .addComponent(ServiceTitle)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(79, 79, 79)
-                        .addComponent(jLabel4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(87, 87, 87))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(71, 71, 71))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel2)
+                .addComponent(ServiceTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3))
-                .addGap(7, 7, 7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(UsersTitle)
+                        .addGap(7, 7, 7)
+                        .addComponent(UsersSubTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(PublisherTitle)
+                        .addGap(7, 7, 7)
+                        .addComponent(PublisherSubTitle)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(UsersTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void UsersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UsersTableMouseClicked
+        String SubName = UsersTable.getValueAt(UsersTable.getSelectedRow(), 0).toString();
+        int SubID = (Integer) UsersTable.getValueAt(UsersTable.getSelectedRow(), 1);
+        try {
+            SubscriberDetailsGUI SDGUI = new SubscriberDetailsGUI(ServiceImp, SubName, SubID);
+            SDGUI.setVisible(true);
+        } catch (RemoteException ex) {
+        }
+    }//GEN-LAST:event_UsersTableMouseClicked
+
+    private void PublishersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PublishersTableMouseClicked
+        String PubName = PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 0).toString();
+        int NumberOfSubscribers = (Integer) PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 1); 
+        try {
+            PublisherDetailsGUI PDGUI = new PublisherDetailsGUI(ServiceImp, PubName, NumberOfSubscribers);
+            PDGUI.setVisible(true);
+        } catch (RemoteException ex) {
+        }
+        
+    }//GEN-LAST:event_PublishersTableMouseClicked
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -166,14 +251,14 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel PublisherSubTitle;
+    private javax.swing.JLabel PublisherTitle;
+    private javax.swing.JTable PublishersTable;
+    private javax.swing.JLabel ServiceTitle;
+    private javax.swing.JLabel UsersSubTitle;
+    private javax.swing.JTable UsersTable;
+    private javax.swing.JScrollPane UsersTableScroll;
+    private javax.swing.JLabel UsersTitle;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 }

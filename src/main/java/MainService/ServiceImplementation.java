@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ServiceImplementation extends UnicastRemoteObject implements ServiceInterface {
 
+    private ServiceConsoleGUI GUI;
     private Map<String, SubscriberInterface> Subscribers = new HashMap<>();
     private Map<String, PublisherInterface> Publishers = new HashMap<>();
     private Map<String, ArrayList<PublisherInterface>> Subscriptions = new HashMap<>(); // Subscriber -> (Publisher1, Publisher2)
@@ -17,6 +18,20 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
 
     public ServiceImplementation() throws RemoteException {
         super();
+    }
+
+    public void setGUI(ServiceConsoleGUI GUI) {
+        this.GUI = GUI;
+    }
+
+    public int getNumberOfSubscribers(String name) {
+        String keyPub = name + "#";
+        ArrayList<SubscriberInterface> Subscribers = PublisherSubscribers.get(keyPub);
+        if (Subscribers == null) {
+            return 0;
+        } else {
+            return Subscribers.size();
+        }
     }
 
     public String getSubscriberKey(SubscriberInterface Sub) throws RemoteException {
@@ -76,12 +91,17 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
         return new ArrayList<>(Publishers.values());
     }
 
+    public ArrayList<SubscriberInterface> getSubscribers() {
+        return new ArrayList<>(Subscribers.values());
+    }
+
     @Override
     public void registerSubscriber(SubscriberInterface Sub) throws RemoteException {
         String keySub = getSubscriberKey(Sub);
         if (!Subscribers.containsKey(keySub)) {
             this.Subscribers.put(keySub, Sub);
         }
+        GUI.updateGUI();
     }
 
     @Override
@@ -90,6 +110,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
         if (!Publishers.containsKey(keyPub)) {
             this.Publishers.put(keyPub, Pub);
         }
+        GUI.updateGUI();
     }
 
     @Override
@@ -107,6 +128,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
             this.PublisherSubscribers.put(keyPub, new ArrayList<>());
         }
         this.PublisherSubscribers.get(keyPub).add(Sub);
+        GUI.updateGUI();
     }
 
     @Override
@@ -124,6 +146,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
                 this.PublisherSubscribers.get(keyPub).remove(Sub);
             }
         }
+        GUI.updateGUI();
     }
 
     @Override
