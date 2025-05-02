@@ -4,6 +4,7 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
 
     public ServiceConsoleGUI() {
         initComponents();
+        setResizable(false);
     }
 
     @SuppressWarnings("unchecked")

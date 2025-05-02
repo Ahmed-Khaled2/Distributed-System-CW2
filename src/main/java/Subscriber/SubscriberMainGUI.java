@@ -16,11 +16,20 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
     public SubscriberMainGUI() {
         initComponents();
+        
     }
 
     public SubscriberMainGUI(ServiceInterface obj, SubscriberInterface Sub) throws RemoteException {
+
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         initComponents();
         setLocationRelativeTo(null);
+        setResizable(false);
         this.obj = obj;
         this.Sub = Sub;
         ThankYouMessage.setText("Thank you for using our notification system, " + Sub.getName() + " !");
@@ -74,22 +83,20 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
         PublishersTitle = new javax.swing.JLabel();
         NotificationTitle = new javax.swing.JLabel();
-        AvaliablePublishersScroll = new javax.swing.JScrollPane();
-        AvailablePublishers = new javax.swing.JList<>();
         PublishersSubTitle = new javax.swing.JLabel();
         AvaliablePublishersTitle = new javax.swing.JLabel();
         AvaliablePublishersSubTitle = new javax.swing.JLabel();
         CurrentPublishersScroll = new javax.swing.JScrollPane();
         CurrentPublishers = new javax.swing.JList<>();
-        SearchBar = new javax.swing.JTextField();
-        SearchBarTitle = new javax.swing.JLabel();
         HorizontalLine = new javax.swing.JSeparator();
         VerticalLine = new javax.swing.JSeparator();
         NotificationsAreaScroll = new javax.swing.JScrollPane();
         NotificationsArea = new javax.swing.JTextArea();
         BackButton = new javax.swing.JButton();
         ThankYouMessage = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        RefreshButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        AvailablePublishers = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,18 +105,6 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
         NotificationTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         NotificationTitle.setText("Notifications");
-
-        AvailablePublishers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", " " };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        AvailablePublishers.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                AvailablePublishersMouseClicked(evt);
-            }
-        });
-        AvaliablePublishersScroll.setViewportView(AvailablePublishers);
 
         PublishersSubTitle.setText("Publishers you are subscribed to");
 
@@ -130,14 +125,6 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
             }
         });
         CurrentPublishersScroll.setViewportView(CurrentPublishers);
-
-        SearchBar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchBarActionPerformed(evt);
-            }
-        });
-
-        SearchBarTitle.setText("Search Bar");
 
         HorizontalLine.setToolTipText("");
         HorizontalLine.setAlignmentX(2.0F);
@@ -167,7 +154,24 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         ThankYouMessage.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ThankYouMessage.setText("Thank you for using our notification system, Ahmed!");
 
-        jButton1.setText("Ok");
+        RefreshButton.setText("Refresh Notifications");
+        RefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefreshButtonActionPerformed(evt);
+            }
+        });
+
+        AvailablePublishers.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        AvailablePublishers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AvailablePublishersMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(AvailablePublishers);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,48 +180,43 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AvaliablePublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(SearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addComponent(SearchBarTitle))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(AvaliablePublishersSubTitle)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(AvaliablePublishersTitle)
-                                .addComponent(PublishersSubTitle))))
+                        .addGap(50, 50, 50)
+                        .addComponent(PublishersTitle))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(CurrentPublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(CurrentPublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(PublishersTitle)))
-                .addGap(17, 17, 17)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(AvaliablePublishersSubTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(PublishersSubTitle)
+                                    .addComponent(AvaliablePublishersTitle)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(RefreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BackButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(NotificationTitle)
-                        .addGap(145, 145, 145))
+                        .addGap(132, 132, 132))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(ThankYouMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(BackButton))
-                            .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15))
-                    .addComponent(HorizontalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)))
+                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addComponent(HorizontalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(211, 211, 211)
                     .addComponent(VerticalLine, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(447, Short.MAX_VALUE)))
+                    .addContainerGap(343, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,62 +228,32 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(HorizontalLine, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BackButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(15, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(PublishersSubTitle)
                         .addGap(18, 18, 18)
-                        .addComponent(CurrentPublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(CurrentPublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(AvaliablePublishersTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(AvaliablePublishersSubTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SearchBarTitle)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(RefreshButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(SearchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                        .addComponent(BackButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(HorizontalLine, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(AvaliablePublishersScroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(32, Short.MAX_VALUE))))
+                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(VerticalLine, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addComponent(VerticalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void SearchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SearchBarActionPerformed
-
-    private void AvailablePublishersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AvailablePublishersMouseClicked
-        String Selected = AvailablePublishers.getSelectedValue();
-        int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            for (int i = 0; i < availablePublishers.size(); i++) {
-                try {
-                    if (availablePublishers.get(i).getName().equals(Selected)) {
-                        obj.subscribe(Sub, availablePublishers.get(i));
-                        JOptionPane.showMessageDialog(this, "You are now subscribed to " + Selected);
-                        updateGUI();
-                        break;
-                    }
-                } catch (RemoteException ex) {
-                }
-            }
-        }
-    }//GEN-LAST:event_AvailablePublishersMouseClicked
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         SubscriberWelcomeGUI SWGUI = new SubscriberWelcomeGUI();
@@ -310,6 +279,28 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CurrentPublishersMouseClicked
 
+    private void AvailablePublishersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AvailablePublishersMouseClicked
+        String Selected = AvailablePublishers.getSelectedValue();
+         int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+         if (choice == JOptionPane.YES_OPTION) {
+             for (int i = 0; i < availablePublishers.size(); i++) {
+                 try {
+                     if (availablePublishers.get(i).getName().equals(Selected)) {
+                         obj.subscribe(Sub, availablePublishers.get(i));
+                         JOptionPane.showMessageDialog(this, "You are now subscribed to " + Selected);
+                         updateGUI();
+                         break;
+                     }
+                 } catch (RemoteException ex) {
+                 }
+             }
+         }
+    }//GEN-LAST:event_AvailablePublishersMouseClicked
+
+    private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
+        updateNotifications();
+    }//GEN-LAST:event_RefreshButtonActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -319,7 +310,6 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> AvailablePublishers;
-    private javax.swing.JScrollPane AvaliablePublishersScroll;
     private javax.swing.JLabel AvaliablePublishersSubTitle;
     private javax.swing.JLabel AvaliablePublishersTitle;
     private javax.swing.JButton BackButton;
@@ -331,10 +321,9 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane NotificationsAreaScroll;
     private javax.swing.JLabel PublishersSubTitle;
     private javax.swing.JLabel PublishersTitle;
-    private javax.swing.JTextField SearchBar;
-    private javax.swing.JLabel SearchBarTitle;
+    private javax.swing.JButton RefreshButton;
     private javax.swing.JLabel ThankYouMessage;
     private javax.swing.JSeparator VerticalLine;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

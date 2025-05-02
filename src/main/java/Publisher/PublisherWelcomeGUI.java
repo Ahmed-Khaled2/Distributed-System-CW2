@@ -11,6 +11,7 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
 
     public PublisherWelcomeGUI() {
         initComponents();
+        setResizable(false);
         setLocationRelativeTo(null);
     }
 

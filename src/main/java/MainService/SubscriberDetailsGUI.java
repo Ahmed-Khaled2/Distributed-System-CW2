@@ -4,6 +4,7 @@ public class SubscriberDetailsGUI extends javax.swing.JFrame {
 
     public SubscriberDetailsGUI() {
         initComponents();
+        setResizable(false);
     }
 
     @SuppressWarnings("unchecked")

@@ -11,6 +11,7 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
     public SubscriberWelcomeGUI() {
         initComponents();
         setLocationRelativeTo(null);
+        setResizable(false);
     }
 
     private boolean isInteger(String input) {

@@ -129,8 +129,13 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     @Override
     public void sendNotification(PublisherInterface Pub, String notification) throws RemoteException {
         String keyPub = getPublisherKey(Pub);
-        for (int i = 0; i < PublisherSubscribers.get(keyPub).size(); i++) {
-            PublisherSubscribers.get(keyPub).get(i).receiveNotification("[" + Pub.getName() + "] " + notification);
+
+        ArrayList<SubscriberInterface> Subscribers = PublisherSubscribers.get(keyPub);
+
+        if (Subscribers != null) {
+            for (int i = 0; i < Subscribers.size(); i++) {
+                Subscribers.get(i).receiveNotification("[" + Pub.getName() + "] " + notification);
+            }
         }
     }
 }

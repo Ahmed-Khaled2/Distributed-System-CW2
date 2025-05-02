@@ -4,6 +4,7 @@ public class PublisherDetailsGUI extends javax.swing.JFrame {
 
     public PublisherDetailsGUI() {
         initComponents();
+        setResizable(false);
     }
 
     @SuppressWarnings("unchecked")
