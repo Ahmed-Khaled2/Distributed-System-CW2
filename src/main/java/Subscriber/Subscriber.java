@@ -14,12 +14,12 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
         this.name = name;
         this.id = id;
     }
-    
+
     @Override
     public ArrayList<String> getNotifications() throws RemoteException {
         return notifications;
     }
-    
+
     @Override
     public String getName() throws RemoteException {
         return name;

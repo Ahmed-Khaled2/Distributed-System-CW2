@@ -40,6 +40,7 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     }
 
     public void updateSubscribersList() throws RemoteException {
+        this.subscribers = obj.getPublisherSubscribers(Pub);
         String[] subscribersList = new String[subscribers.size()];
         for (int i = 0; i < subscribers.size(); i++) {
             subscribersList[i] = subscribers.get(i).getName();

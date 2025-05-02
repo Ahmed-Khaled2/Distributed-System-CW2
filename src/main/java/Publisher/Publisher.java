@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class Publisher extends UnicastRemoteObject implements PublisherInterface{
+public class Publisher extends UnicastRemoteObject implements PublisherInterface {
 
     private String name;
     private ArrayList<String> notifications = new ArrayList<>();
@@ -18,9 +18,9 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
     public ArrayList<String> getNotifications() throws RemoteException {
         return notifications;
     }
-    
+
     @Override
-    public void saveNotification(String notification) throws RemoteException{
+    public void saveNotification(String notification) throws RemoteException {
         notifications.add(notification);
     }
 
@@ -28,6 +28,5 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
     public String getName() throws RemoteException {
         return name;
     }
-    
-    
+
 }

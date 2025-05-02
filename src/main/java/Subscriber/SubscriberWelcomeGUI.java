@@ -128,10 +128,9 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
                 ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
                 SubscriberInterface sub;
-                if(obj.hasSubscriber(name, id)){
-                    sub = obj.getSubscriber(name,id);
-                }
-                else {
+                if (obj.hasSubscriber(name, id)) {
+                    sub = obj.getSubscriber(name, id);
+                } else {
                     sub = new Subscriber(name, id);
                     obj.registerSubscriber(sub);
                 }

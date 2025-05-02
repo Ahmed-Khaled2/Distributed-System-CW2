@@ -104,10 +104,9 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
                 ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
                 PublisherInterface pub;
-                if (obj.hasPublisher(name)){
+                if (obj.hasPublisher(name)) {
                     pub = obj.getPublisher(name);
-                }
-                else {
+                } else {
                     pub = new Publisher(name);
                     obj.registerPublisher(pub);
                 }
