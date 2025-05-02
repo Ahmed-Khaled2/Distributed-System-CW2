@@ -35,7 +35,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="SubscribersList" min="-2" pref="167" max="-2" attributes="0"/>
+                      <Component id="SubscribersListScroll" min="-2" pref="167" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="20" max="32767" attributes="0"/>
@@ -48,10 +48,10 @@
                       <Group type="102" attributes="0">
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="NotificationsArea" alignment="1" min="-2" pref="407" max="-2" attributes="0"/>
+                              <Component id="NotificationsAreaScroll" alignment="1" min="-2" pref="407" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="ChatArea" max="32767" attributes="0"/>
+                                      <Component id="ChatAreaScroll" max="32767" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="ThankYouMessage" pref="325" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
@@ -92,15 +92,15 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="SubscribersSubTitle" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="SubscribersList" min="-2" pref="411" max="-2" attributes="0"/>
+                      <Component id="SubscribersListScroll" min="-2" pref="411" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="HorizontalLine" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="NotificationsArea" min="-2" pref="314" max="-2" attributes="0"/>
+                      <Component id="NotificationsAreaScroll" min="-2" pref="314" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="ChatArea" max="32767" attributes="0"/>
+                          <Component id="ChatAreaScroll" max="32767" attributes="0"/>
                           <Component id="SendButton" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -145,14 +145,14 @@
         <Property name="text" type="java.lang.String" value="This is a list of all current subscribers"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="SubscribersList">
+    <Container class="javax.swing.JScrollPane" name="SubscribersListScroll">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JList" name="List">
+        <Component class="javax.swing.JList" name="SubscribersList">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
@@ -212,14 +212,14 @@
         </Property>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="NotificationsArea">
+    <Container class="javax.swing.JScrollPane" name="NotificationsAreaScroll">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="jTextArea1">
+        <Component class="javax.swing.JTextArea" name="NotificationsArea">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
@@ -235,7 +235,7 @@
         </Property>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="ChatArea">
+    <Container class="javax.swing.JScrollPane" name="ChatAreaScroll">
       <Properties>
         <Property name="verticalScrollBarPolicy" type="int" value="21"/>
       </Properties>
@@ -245,7 +245,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="jTextArea3">
+        <Component class="javax.swing.JTextArea" name="ChatArea">
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
@@ -274,6 +274,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Back"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BackButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

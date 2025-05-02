@@ -2,8 +2,12 @@ package Subscriber;
 
 import Starter.StarterGUI;
 import MainService.ServiceInterface;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class SubscriberWelcomeGUI extends javax.swing.JFrame {
@@ -15,9 +19,9 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
 
     private boolean isInteger(String input) {
         try {
-            Integer.parseInt(input);
+            Integer.valueOf(input);
             return true;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
@@ -124,15 +128,12 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
         } else {
             String name = NameField.getText();
             int id = Integer.parseInt(IDField.getText());
+
             try {
-                Registry reg = LocateRegistry.getRegistry("localhost", 1099);
-                Subscriber Sub = new Subscriber(name, id);
-
-                ServiceInterface obj = (ServiceInterface) reg.lookup("MainService");
-                //obj.registerSubscriber(name, id, Sub);
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "The Server is not online yet, please wait.", "Error", JOptionPane.ERROR_MESSAGE);
+                SubscriberMainGUI SMGUI = new SubscriberMainGUI(name, id);
+                SMGUI.setVisible(true);
+                this.dispose();
+            } catch (Exception ex) {
             }
         }
     }//GEN-LAST:event_LoginButtonActionPerformed
