@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class ServiceImplementation extends UnicastRemoteObject implements ServiceInterface {
 
-    private ArrayList<SubscriberInterface> Subscribers = new ArrayList<>();
-    private ArrayList<PublisherInterface> Publishers = new ArrayList<>();
+    private Map<String, SubscriberInterface> Subscribers = new HashMap<>();
+    private Map<String, PublisherInterface> Publishers = new HashMap<>();
     private Map<String, ArrayList<PublisherInterface>> Subscriptions = new HashMap<>(); // Subscriber -> (Publisher1, Publisher2)
     private Map<String, ArrayList<SubscriberInterface>> PublisherSubscribers = new HashMap<>(); // Publisher1 -> (Ahmed, Khaled)
 
@@ -25,6 +25,18 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
 
     public String getPublisherKey(PublisherInterface Pub) throws RemoteException {
         return Pub.getName() + "#";
+    }
+
+    @Override
+    public boolean hasSubscriber(String name, int id) throws RemoteException {
+        String keySub = name + "#" + id;
+        return Subscribers.containsKey(keySub);
+    }
+    
+    @Override
+    public boolean hasPublisher(String name) throws RemoteException {
+        String keyPub = name + "#";
+        return Publishers.containsKey(keyPub);
     }
 
     @Override
@@ -48,26 +60,36 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     }
 
     @Override
-    public ArrayList<SubscriberInterface> getSubscribers() throws RemoteException {
-        return Subscribers;
+    public SubscriberInterface getSubscriber(String name, int id) throws RemoteException {
+        String keySub = name + "#" + id;
+        return Subscribers.get(keySub);
     }
 
     @Override
-    public ArrayList<PublisherInterface> getPublishers() throws RemoteException {
-        return Publishers;
+    public PublisherInterface getPublisher(String name) throws RemoteException {
+        String keyPub = name + "#";
+        return Publishers.get(keyPub);
+    }
+    
+    @Override
+    public ArrayList<PublisherInterface> getPublishers()throws RemoteException {
+        return new ArrayList<>(Publishers.values());
     }
 
     @Override
     public void registerSubscriber(SubscriberInterface Sub) throws RemoteException {
-        if (!Subscribers.contains(Sub)) {
-            this.Subscribers.add(Sub);
+        String keySub = getSubscriberKey(Sub);
+        if (!Subscribers.containsKey(keySub)) {
+            this.Subscribers.put(keySub, Sub);
+
         }
     }
 
     @Override
     public void registerPublisher(PublisherInterface Pub) throws RemoteException {
-        if (!Publishers.contains(Pub)) {
-            this.Publishers.add(Pub);
+        String keyPub = getPublisherKey(Pub);
+        if (!Publishers.containsKey(keyPub)) {
+            this.Publishers.put(keyPub, Pub);
         }
     }
 

@@ -127,9 +127,15 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
             try {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
                 ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
-                SubscriberInterface Sub = new Subscriber(name, id);
-                obj.registerSubscriber(Sub);
-                SubscriberMainGUI SMGUI = new SubscriberMainGUI(obj, Sub);
+                SubscriberInterface sub;
+                if(obj.hasSubscriber(name, id)){
+                    sub = obj.getSubscriber(name,id);
+                }
+                else {
+                    sub = new Subscriber(name, id);
+                    obj.registerSubscriber(sub);
+                }
+                SubscriberMainGUI SMGUI = new SubscriberMainGUI(obj, sub);
                 SMGUI.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {
