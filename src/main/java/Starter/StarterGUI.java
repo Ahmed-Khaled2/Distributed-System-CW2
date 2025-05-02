@@ -5,9 +5,20 @@ import Subscriber.SubscriberWelcomeGUI;
 
 public class StarterGUI extends javax.swing.JFrame {
 
+    //Default Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
     public StarterGUI() {
         initComponents();
+        setResizable(false);
         setLocationRelativeTo(null);
+        
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -21,6 +32,7 @@ public class StarterGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         Title.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Title.setText("Notification System");
 
         UserButton.setText("User");
@@ -50,16 +62,12 @@ public class StarterGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(77, 77, 77)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(UserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PublisherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(Title)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addComponent(UserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PublisherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(88, Short.MAX_VALUE))
+            .addComponent(Title, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -76,12 +84,16 @@ public class StarterGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Publisher Button - After clicking, this GUI gets closed and a new instance 
+    //                   of PulisherWelcomeGUI is opened [login page for publishers]
     private void PublisherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PublisherButtonActionPerformed
         PublisherWelcomeGUI PWGUI = new PublisherWelcomeGUI();
         PWGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_PublisherButtonActionPerformed
 
+    //User Button - After clicking, this GUI gets closed and a new instance 
+    //              of SubscriberWelcomeGUI is opened [login page for users]
     private void UserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UserButtonActionPerformed
         SubscriberWelcomeGUI SWGUI = new SubscriberWelcomeGUI();
         SWGUI.setVisible(true);

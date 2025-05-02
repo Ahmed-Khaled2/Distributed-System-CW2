@@ -12,7 +12,7 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
     //initComponents() - Generates GUI component's code and properties
     //setLocationRelativeTo(null) - Center the GUI on the screen
     //setResizable(false) - Disable resizing of the GUI
-    // javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
     public SubscriberWelcomeGUI() {
         initComponents();
         setLocationRelativeTo(null);
