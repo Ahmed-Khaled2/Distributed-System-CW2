@@ -1,37 +1,37 @@
 package Subscriber;
 
-import Publisher.PublisherInterface;
+import Publisher.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Subscriber extends UnicastRemoteObject implements SubscriberInterface {
 
     private String name;
     private int id;
-    private ArrayList<PublisherInterface> subscribedPublishers = new ArrayList<>();
-    private ArrayList<String> notifications = new ArrayList<>();
+    private Map<Publisher, ArrayList<String>> PublisherNotifications = new HashMap<>();
 
     public Subscriber(String name, int id) throws RemoteException {
         this.name = name;
         this.id = id;
     }
 
-    public void subscribePublisher(PublisherInterface P) {
-        if (!subscribedPublishers.contains(P)) {
-            subscribedPublishers.add(P);
-        }
+    public String getName() {
+        return name;
     }
 
-    public void unsubscribePublisher(PublisherInterface P) {
-        if (subscribedPublishers.contains(P)) {
-            subscribedPublishers.remove(P);
-        }
+    public int getId() {
+        return id;
     }
 
     @Override
-    public void receiveNotification(String notification) throws RemoteException {
+    public void receiveNotification(String notification, Publisher Pub) throws RemoteException {
+        if (!PublisherNotifications.containsKey(Pub)){
+            PublisherNotifications.put(Pub, new ArrayList<>());
+        }
+        PublisherNotifications.get(Pub).add(notification);
         System.out.println(notification);
-        notifications.add(notification);
     }
 }
