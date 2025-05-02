@@ -8,31 +8,39 @@ import javax.swing.JOptionPane;
 
 public class SubscriberMainGUI extends javax.swing.JFrame {
 
+    //Instance variables - gives easier access to important variables across all the functions
     private SubscriberInterface Sub;
     private ServiceInterface obj;
     private ArrayList<String> notifications = new ArrayList<>();
     private ArrayList<PublisherInterface> availablePublishers = new ArrayList<>();
     private ArrayList<PublisherInterface> currentPublishers = new ArrayList<>();
 
-    public SubscriberMainGUI() {
-        initComponents();
-
-    }
-
+    //Loaded Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //setText() - Initializes the text field responsle for the [Thank you message]
+    //UpdateGUI() - Initializes the instance variables and updates the GUI
     public SubscriberMainGUI(ServiceInterface obj, SubscriberInterface Sub) throws RemoteException {
+        initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setLocationRelativeTo(null);
-        setResizable(false);
+
         this.obj = obj;
         this.Sub = Sub;
         ThankYouMessage.setText("Thank you for using our notification system, " + Sub.getName() + " !");
+
         updateGUI();
     }
 
+    //UpdateGUI - Is responsible for calling [updateCurrentPublishers, updateAvailablePublishers,
+    //            and updateNotifications] functions which update the entire GUI
     public void updateGUI() throws RemoteException {
         updateLists();
         updateCurrentPublishers();
@@ -40,6 +48,12 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         updateNotifications();
     }
 
+    //updateNotifications - This functions updates the list of available publishers 
+    //                      by creating a StringBuilder with which helps format the
+    //                      string then a for-loop is called
+    //for-loop block - Iteraters over all the notifications and append them to the 'sb'
+    //                 string followed by a new line
+    //setText() - This function passes the created string to the component on the GUI
     public void updateNotifications() {
         StringBuilder sb = new StringBuilder();
 
@@ -50,27 +64,50 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         NotificationsArea.setText(sb.toString());
     }
 
+    //updateNotifications - Initializes [availablePublishers, notifications, and
+    //                      currentPublishers] by using [getPublishers, getNotifications,
+    //                      and getSubscriptions functions via the remote object
+    //removeAll() - This function removes the current publishers from the available publishers
+    //              basically, getting the difference between them
     public void updateLists() throws RemoteException {
         this.availablePublishers = obj.getPublishers();
         this.notifications = Sub.getNotifications();
         this.currentPublishers = obj.getSubscriptions((SubscriberInterface) Sub);
+
         availablePublishers.removeAll(currentPublishers);
     }
 
+    //Updates available publishers list - This functions updates the list of available
+    //                                    publishers by creating a list of String with
+    //                                    similar size as 'availablePublishers', then a
+    //                                    for-loop is called
+    //for-loop block - Iteraters over all the available publishers and gets their name
+    //                 then these names are stored in the String list
+    //setListData() - This function passes the created list to the component on the GUI
     public void updateAvailablePublishers() throws RemoteException {
         String[] availablePublisherList = new String[availablePublishers.size()];
+
         for (int i = 0; i < availablePublishers.size(); i++) {
             availablePublisherList[i] = availablePublishers.get(i).getName();
         }
+
         AvailablePublishers.setListData(availablePublisherList);
     }
 
+    //Updates current publishers list - This functions updates the list of current
+    //                                  publishers by creating a list of String with
+    //                                  similar size as 'currentPublishers', then a
+    //                                  for-loop is called
+    //for-loop block - Iteraters over all the current publishers and gets their name
+    //                 then these names are stored in the String list
+    //setListData() - This function passes the created list to the component on the GUI
     public void updateCurrentPublishers() throws RemoteException {
-        System.out.println(currentPublishers.size());
         String[] currentPublisherList = new String[currentPublishers.size()];
+
         for (int i = 0; i < currentPublishers.size(); i++) {
             currentPublisherList[i] = currentPublishers.get(i).getName();
         }
+
         CurrentPublishers.setListData(currentPublisherList);
     }
 
@@ -251,22 +288,35 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //Back Button - After clicking, this GUI gets closed and the previous GUI
+    //              is opened again via a new instance
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         SubscriberWelcomeGUI SWGUI = new SubscriberWelcomeGUI();
         SWGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
+    //Unsubscribing from a publisher - After clicking on a publisher via a mouse click
+    //                                 the name of the publisher is retrived and stored
+    //                                 in 'Selected', and a pop-up message appears to
+    //                                 confirm the unsubscription. After clicking 'Yes'
+    //                                 a for-loop is called.
+    //for-loop block - Iteraters over all the avaliable publishers to find the publisher
+    //                 with the same name as 'Selected', after it's found another pop-up
+    //                 message apears to confirm the unsubscription. Then, unsubscribe()
+    //                 function is called to remove from the Service that this user was
+    //                 subscribed to the selected publisher. At last, UpdateGUI function
+    //                 is called to update the GUI
     private void CurrentPublishersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CurrentPublishersMouseClicked
-        String Selected = CurrentPublishers.getSelectedValue();
-        int choice = JOptionPane.showConfirmDialog(this, "Do you want to unsubscribe from " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+        String selected = CurrentPublishers.getSelectedValue();
+        int choice = JOptionPane.showConfirmDialog(this, "Do you want to unsubscribe from " + selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+
         if (choice == JOptionPane.YES_OPTION) {
             for (int i = 0; i < currentPublishers.size(); i++) {
                 try {
-                    if (currentPublishers.get(i).getName().equals(Selected)) {
+                    if (currentPublishers.get(i).getName().equals(selected)) {
                         obj.unsubscribe(Sub, currentPublishers.get(i));
-                        JOptionPane.showMessageDialog(this, "You have unsubscribed from " + Selected);
+                        JOptionPane.showMessageDialog(this, "You have unsubscribed from " + selected);
                         updateGUI();
                         break;
                     }
@@ -276,15 +326,27 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CurrentPublishersMouseClicked
 
+    //Subscribing to a publisher - After clicking on a publisher via a mouse click
+    //                             the name of the publisher is retrived and stored
+    //                             in 'Selected', and a pop-up message appears to
+    //                             confirm the subscription. After clicking 'Yes'
+    //                             a for-loop is called.
+    //for-loop block - Iteraters over all the avaliable publishers to find the publisher
+    //                 with the same name as 'Selected', after it's found another pop-up
+    //                 message apears to confirm the subscription. Then, subscribe()
+    //                 function is called to store in the Service that this user
+    //                 subscribed to the selected publisher. At last, UpdateGUI function
+    //                 is called to update the GUI
     private void AvailablePublishersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AvailablePublishersMouseClicked
-        String Selected = AvailablePublishers.getSelectedValue();
-        int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + Selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+        String selected = AvailablePublishers.getSelectedValue();
+        int choice = JOptionPane.showConfirmDialog(this, "Do you want to subscribe to " + selected + "?", "Confirm Subscription", JOptionPane.YES_NO_OPTION);
+
         if (choice == JOptionPane.YES_OPTION) {
             for (int i = 0; i < availablePublishers.size(); i++) {
                 try {
-                    if (availablePublishers.get(i).getName().equals(Selected)) {
+                    if (availablePublishers.get(i).getName().equals(selected)) {
                         obj.subscribe(Sub, availablePublishers.get(i));
-                        JOptionPane.showMessageDialog(this, "You are now subscribed to " + Selected);
+                        JOptionPane.showMessageDialog(this, "You are now subscribed to " + selected);
                         updateGUI();
                         break;
                     }
@@ -294,20 +356,15 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_AvailablePublishersMouseClicked
 
+    //Refresh Button - After clicking, UpdateGUI() function is called which
+    //                 updates everything in the GUI including [Notifications,
+    //                 Avaliable Publishers, and Current Publishers]
     private void RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshActionPerformed
         try {
             updateGUI();
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_RefreshActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SubscriberMainGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> AvailablePublishers;
     private javax.swing.JLabel AvaliablePublishersSubTitle;

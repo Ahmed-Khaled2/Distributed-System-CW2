@@ -8,16 +8,23 @@ import javax.swing.JOptionPane;
 
 public class SubscriberWelcomeGUI extends javax.swing.JFrame {
 
+    //Default Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    // javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
     public SubscriberWelcomeGUI() {
+        initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setLocationRelativeTo(null);
-        setResizable(false);
     }
 
+    //Helper function - Checks if a string contains integers or not
     private boolean isInteger(String input) {
         try {
             Integer.valueOf(input);
@@ -117,6 +124,25 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Login Button - After clicking the button, the function verifies the inputs
+    //               match the requied paramers. By ensuring they are not empty
+    //               and the ID field can only be an integer
+    //Registry reg - Creats an object of type Registry, this is where the remote
+    //               objects are registered
+    //LocateRegistry.getRegistry() - Connects to the RMI registry on 'localhost'
+    //                               at port '1099'
+    //SubscriberInterface service - Creats an object of type SubscriberInterface, this
+    //                              is the object that can call remote methods
+    //reg.lookup("NotificationSystem") - Looks up the remote object named 
+    //                                   "NotificationSystem" from the RMI
+    //SubscriberInterface sub - Local object of Subscriber
+    //if-else block - calls the hasSubscriber() function to check if the user exists
+    //                If they exit, the 'sub' will be assigned with the stored user
+    //                object from the service side. Else a new object will be registered
+    //                using registerSubscriber() function
+    //SubscriberMainGUI SMGUI - A GUI of type SubscriberMainGUI [Which opens the main GUI
+    //                          for the subscriber] is created and Initialized with an
+    //                          instance of the 'service' [Remote Object] and 'sub' subscriber
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
         if (NameField.getText().isEmpty() || IDField.getText().isEmpty() || !isInteger(IDField.getText())) {
             if (NameField.getText().isEmpty()) {
@@ -127,39 +153,39 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Please, make sure your ID is an integer.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
+
             String name = NameField.getText();
             int id = Integer.parseInt(IDField.getText());
+
             try {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
-                ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
+                ServiceInterface service = (ServiceInterface) reg.lookup("NotificationSystem");
+
                 SubscriberInterface sub;
-                if (obj.hasSubscriber(name, id)) {
-                    sub = obj.getSubscriber(name, id);
+
+                if (service.hasSubscriber(name, id)) {
+                    sub = service.getSubscriber(name, id);
                 } else {
                     sub = new Subscriber(name, id);
-                    obj.registerSubscriber(sub);
+                    service.registerSubscriber(sub);
                 }
-                SubscriberMainGUI SMGUI = new SubscriberMainGUI(obj, sub);
+
+                SubscriberMainGUI SMGUI = new SubscriberMainGUI(service, sub);
                 SMGUI.setVisible(true);
                 this.dispose();
+
             } catch (Exception ex) {
             }
         }
     }//GEN-LAST:event_LoginButtonActionPerformed
 
+    //Back Button - After clicking, this GUI gets closed and the previous GUI
+    //              is opened again via a new instance
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         StarterGUI SGUI = new StarterGUI();
         SGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SubscriberWelcomeGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JTextField IDField;
