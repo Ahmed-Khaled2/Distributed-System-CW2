@@ -42,7 +42,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         NotificationsArea = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         BackButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        ThankYouMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,8 +102,8 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
 
         BackButton.setText("Back");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Thank you for using our notification system, Ahmed!");
+        ThankYouMessage.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ThankYouMessage.setText("Thank you for using our notification system, Ahmed!");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -144,7 +144,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ThankYouMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(BackButton))
                                     .addComponent(NotificationsArea, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -171,7 +171,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(BackButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(PublishersSubTitle)
@@ -250,8 +250,8 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel PublishersTitle;
     private javax.swing.JTextField SearchBar;
     private javax.swing.JLabel SearchBarTitle;
+    private javax.swing.JLabel ThankYouMessage;
     private javax.swing.JSeparator VerticalLine;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JTextArea jTextArea1;
