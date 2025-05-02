@@ -12,18 +12,26 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
 
     private ArrayList<SubscriberInterface> Subscribers = new ArrayList<>();
     private ArrayList<PublisherInterface> Publishers = new ArrayList<>();
-    private Map<SubscriberInterface, ArrayList<PublisherInterface>> Subscriptions = new HashMap<>(); // Subscriber -> (Publisher1, Publisher2)
-    private Map<PublisherInterface, ArrayList<SubscriberInterface>> PublisherSubscribers = new HashMap<>(); // Publisher1 -> (Ahmed, Khaled)
+    private Map<String, ArrayList<PublisherInterface>> Subscriptions = new HashMap<>(); // Subscriber -> (Publisher1, Publisher2)
+    private Map<String, ArrayList<SubscriberInterface>> PublisherSubscribers = new HashMap<>(); // Publisher1 -> (Ahmed, Khaled)
 
     public ServiceImplementation() throws RemoteException {
         super();
     }
 
+    public String getSubscriberKey(SubscriberInterface Sub) throws RemoteException {
+        return Sub.getName() + "#" + Sub.getId();
+    }
+
+    public String getPublisherKey(PublisherInterface Pub) throws RemoteException {
+        return Pub.getName() + "#";
+    }
+
     @Override
     public ArrayList<PublisherInterface> getSubscriptions(SubscriberInterface Sub) throws RemoteException {
-
-        if (Subscriptions.containsKey(Sub)) {
-            return Subscriptions.get(Sub);
+        String keySub = getSubscriberKey(Sub);
+        if (Subscriptions.containsKey(keySub)) {
+            return Subscriptions.get(keySub);
         } else {
             return new ArrayList<>();
         }
@@ -31,7 +39,12 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
 
     @Override
     public ArrayList<SubscriberInterface> getPublisherSubscribers(PublisherInterface Pub) throws RemoteException {
-        return PublisherSubscribers.get(Pub);
+        String keyPub = getPublisherKey(Pub);
+        if (PublisherSubscribers.containsKey(keyPub)) {
+            return PublisherSubscribers.get(keyPub);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -53,35 +66,44 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
 
     @Override
     public void registerPublisher(PublisherInterface Pub) throws RemoteException {
-        this.Publishers.add(Pub);
+        if (!Publishers.contains(Pub)) {
+            this.Publishers.add(Pub);
+        }
     }
 
     @Override
     public void subscribe(SubscriberInterface Sub, PublisherInterface Pub) throws RemoteException {
-        if (!Subscriptions.containsKey(Sub)) {
-            this.Subscriptions.put(Sub, new ArrayList<>());
-        }
-        this.Subscriptions.get(Sub).add(Pub);
 
-        if (!PublisherSubscribers.containsKey(Pub)) {
-            this.PublisherSubscribers.put(Pub, new ArrayList<>());
+        String keySub = getSubscriberKey(Sub);
+        String keyPub = getPublisherKey(Pub);
+
+        if (!Subscriptions.containsKey(keySub)) {
+            this.Subscriptions.put(keySub, new ArrayList<>());
         }
-        this.PublisherSubscribers.get(Pub).add(Sub);
+        this.Subscriptions.get(keySub).add(Pub);
+
+        if (!PublisherSubscribers.containsKey(keyPub)) {
+            this.PublisherSubscribers.put(keyPub, new ArrayList<>());
+        }
+        this.PublisherSubscribers.get(keyPub).add(Sub);
     }
 
     @Override
     public void unsubscribe(SubscriberInterface Sub, PublisherInterface Pub) throws RemoteException {
-        if (Subscriptions.containsKey(Sub)) {
-            if (Subscriptions.get(Sub).contains(Pub)) {
-                this.Subscriptions.get(Sub).remove(Pub);
+        String keySub = getSubscriberKey(Sub);
+        if (Subscriptions.containsKey(keySub)) {
+            if (Subscriptions.get(keySub).contains(Pub)) {
+                this.Subscriptions.get(keySub).remove(Pub);
             }
         }
     }
 
     @Override
     public void sendNotification(PublisherInterface Pub, String notification) throws RemoteException {
-        for (int i = 0; i < PublisherSubscribers.get(Pub).size(); i++) {
-            PublisherSubscribers.get(Pub).get(i).receiveNotification("[" + Pub.getName() + "]" + notification);
+        String keyPub = getPublisherKey(Pub);
+
+        for (int i = 0; i < PublisherSubscribers.get(keyPub).size(); i++) {
+            PublisherSubscribers.get(keyPub).get(i).receiveNotification("[" + Pub.getName() + "]" + notification);
         }
 
     }

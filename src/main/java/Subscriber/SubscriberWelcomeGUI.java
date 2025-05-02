@@ -2,12 +2,8 @@ package Subscriber;
 
 import Starter.StarterGUI;
 import MainService.ServiceInterface;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class SubscriberWelcomeGUI extends javax.swing.JFrame {
@@ -128,9 +124,12 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
         } else {
             String name = NameField.getText();
             int id = Integer.parseInt(IDField.getText());
-
             try {
-                SubscriberMainGUI SMGUI = new SubscriberMainGUI(name, id);
+                Registry reg = LocateRegistry.getRegistry("localhost", 1099);
+                ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
+                SubscriberInterface Sub = new Subscriber(name, id);
+                obj.registerSubscriber(Sub);
+                SubscriberMainGUI SMGUI = new SubscriberMainGUI(obj, Sub);
                 SMGUI.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {

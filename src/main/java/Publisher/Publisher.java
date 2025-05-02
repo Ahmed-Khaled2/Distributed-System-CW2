@@ -14,11 +14,13 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
         this.name = name;
     }
 
-    public ArrayList<String> getNotifications() {
+    @Override
+    public ArrayList<String> getNotifications() throws RemoteException {
         return notifications;
     }
     
-    public void saveNotification(String notification){
+    @Override
+    public void saveNotification(String notification) throws RemoteException{
         notifications.add(notification);
     }
 

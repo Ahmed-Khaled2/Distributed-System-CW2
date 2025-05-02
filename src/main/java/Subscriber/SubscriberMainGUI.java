@@ -21,17 +21,11 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public SubscriberMainGUI(String name, int id) throws RemoteException, NotBoundException {
+    public SubscriberMainGUI(ServiceInterface obj, SubscriberInterface Sub) throws RemoteException {
         initComponents();
         setLocationRelativeTo(null);
-
-        Registry reg = LocateRegistry.getRegistry("localhost", 1099);
-        ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
-        SubscriberInterface Sub = new Subscriber(name, id); 
-        
         this.obj = obj;
         this.Sub = Sub;
-        
         ThankYouMessage.setText("Thank you for using our notification system, " + Sub.getName() + " !");
         updateGUI();
     }

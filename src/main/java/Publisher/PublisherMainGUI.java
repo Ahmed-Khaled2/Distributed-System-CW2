@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class PublisherMainGUI extends javax.swing.JFrame {
 
     private ServiceInterface obj;
-    private Publisher Pub;
+    private PublisherInterface Pub;
     private ArrayList<String> notifications = new ArrayList<>();
     private ArrayList<SubscriberInterface> subscribers = new ArrayList<>();
 
@@ -16,7 +16,7 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public PublisherMainGUI(ServiceInterface obj, Publisher Pub) throws RemoteException {
+    public PublisherMainGUI(ServiceInterface obj, PublisherInterface Pub) throws RemoteException {
         initComponents();
         setLocationRelativeTo(null);
         this.obj = obj;
@@ -30,7 +30,7 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         updateSubscribersList();
     }
 
-    public void updateNotifications() {
+    public void updateNotifications() throws RemoteException {
         notifications = Pub.getNotifications();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < notifications.size(); i++) {

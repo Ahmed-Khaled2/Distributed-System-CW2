@@ -15,6 +15,5 @@ public interface ServiceInterface extends Remote {
     public void registerPublisher(PublisherInterface Pub)throws RemoteException;
     public void subscribe(SubscriberInterface Sub, PublisherInterface Pub) throws RemoteException;
     public void unsubscribe(SubscriberInterface Sub, PublisherInterface Pub) throws RemoteException;
-    public void sendNotification(PublisherInterface Pub, String notification) throws RemoteException;
-    
+    public void sendNotification(PublisherInterface Pub, String notification) throws RemoteException; 
 }

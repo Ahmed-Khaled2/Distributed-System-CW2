@@ -102,12 +102,10 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
             String name = NameField.getText();
             try {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
-                PublisherInterface Pub = new Publisher(name);
-
                 ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
+                PublisherInterface Pub = new Publisher(name);
                 obj.registerPublisher(Pub);
-
-                PublisherMainGUI PMGUI = new PublisherMainGUI(obj, (Publisher) Pub);
+                PublisherMainGUI PMGUI = new PublisherMainGUI(obj, Pub);
                 PMGUI.setVisible(true);
                 this.dispose();
 
