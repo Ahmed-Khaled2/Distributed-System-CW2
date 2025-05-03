@@ -1,15 +1,17 @@
 package Publisher;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 
 public class Publisher extends UnicastRemoteObject implements PublisherInterface {
 
     //Instance variables - Publisher's name
     //ArrayList - List to store sent notifications
     private String name;
-    private ArrayList<String> notifications = new ArrayList<>();
+    private Map<String, ArrayList<String>> notifications = new HashMap<>();
 
     //Loaded Constructor - Initializes publisher their name 
     public Publisher(String name) throws RemoteException {
@@ -25,14 +27,17 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
 
     //getNotifications - returns a list of all sent notifications
     @Override
-    public ArrayList<String> getNotifications() throws RemoteException {
-        return notifications;
+    public ArrayList<String> getNotifications(String topic) throws RemoteException {
+        return notifications.getOrDefault(topic, new ArrayList<>());
     }
 
     //saveNotification - Called remotely by the Service when a new notification is sent
     //                   by a publisher, then the notification is stored in 'notifications'
     @Override
-    public void saveNotification(String notification) throws RemoteException {
-        notifications.add(notification);
+    public void saveNotification(String topic, String notification) throws RemoteException {
+        if (!notifications.containsKey(topic)) {
+            notifications.put(topic, new ArrayList<>());
+        }
+        notifications.get(topic).add(notification);
     }
 }

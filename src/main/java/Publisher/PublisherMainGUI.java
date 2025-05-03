@@ -10,6 +10,7 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     //Instance variables - gives easier access to important variables across all the functions
     private PublisherInterface pub;
     private ServiceInterface serviceImp;
+    private String selectedTopic = "General";
     private ArrayList<String> notifications = new ArrayList<>();
     private ArrayList<SubscriberInterface> subscribers = new ArrayList<>();
 
@@ -24,18 +25,19 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
-        
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        
+
         this.pub = pub;
         this.serviceImp = serviceImp;
         ThankYouMessage.setText("Thank you for using our notification system, " + pub.getName() + "!");
-        
+
         updateGUI();
     }
+
     //updateGUI - Is responsible for calling [updateSubscribersList and updateNotifications]
     //            functions which update the entire GUI
     public void updateGUI() throws RemoteException {
@@ -51,14 +53,14 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     //                 string followed by a new line
     //setText() - This function passes the created string to the component on the GUI
     public void updateNotifications() throws RemoteException {
-        notifications = pub.getNotifications();
-        
+        notifications = pub.getNotifications(selectedTopic);
+
         StringBuilder sb = new StringBuilder();
-        
+
         for (int i = 0; i < notifications.size(); i++) {
             sb.append(notifications.get(i)).append("\n");
         }
-        
+
         NotificationsArea.setText(sb.toString());
     }
 
@@ -73,13 +75,13 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     //setListData() - This function passes the created list to the component on the GUI
     public void updateSubscribersList() throws RemoteException {
         this.subscribers = serviceImp.getPublisherSubscribers(pub);
-        
+
         String[] subscribersList = new String[subscribers.size()];
-        
+
         for (int i = 0; i < subscribers.size(); i++) {
             subscribersList[i] = subscribers.get(i).getName();
         }
-        
+
         SubscribersList.setListData(subscribersList);
     }
 
@@ -87,6 +89,7 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        RadioButtonGroup = new javax.swing.ButtonGroup();
         NotificationTitle = new javax.swing.JLabel();
         SubscribersSubTitle = new javax.swing.JLabel();
         SubscribersListScroll = new javax.swing.JScrollPane();
@@ -103,6 +106,9 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         ThankYouMessage = new javax.swing.JLabel();
         BackButton = new javax.swing.JButton();
         RefreshButton = new javax.swing.JButton();
+        Exams = new javax.swing.JRadioButton();
+        Events = new javax.swing.JRadioButton();
+        General = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,6 +179,30 @@ public class PublisherMainGUI extends javax.swing.JFrame {
             }
         });
 
+        RadioButtonGroup.add(Exams);
+        Exams.setText("Exams");
+        Exams.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExamsActionPerformed(evt);
+            }
+        });
+
+        RadioButtonGroup.add(Events);
+        Events.setText("Events");
+        Events.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EventsActionPerformed(evt);
+            }
+        });
+
+        RadioButtonGroup.add(General);
+        General.setText("General");
+        General.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GeneralActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -207,7 +237,14 @@ public class PublisherMainGUI extends javax.swing.JFrame {
                         .addComponent(jLabel7))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(72, 72, 72)
-                        .addComponent(NotificationTitle)))
+                        .addComponent(NotificationTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Exams)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Events)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(General)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -230,7 +267,12 @@ public class PublisherMainGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BackButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Exams)
+                            .addComponent(Events)
+                            .addComponent(General))
+                        .addGap(5, 5, 5)
+                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(ChatAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,15 +297,15 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     //setText() - Clears the 'ChatArea' for easier usage after sending
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendButtonActionPerformed
         try {
-            pub.saveNotification(ChatArea.getText());
-            serviceImp.sendNotification(pub, ChatArea.getText());
-            
+            pub.saveNotification(selectedTopic, ChatArea.getText());
+            serviceImp.sendNotification(pub, selectedTopic, ChatArea.getText());
+
             updateNotifications();
             ChatArea.setText(null);
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_SendButtonActionPerformed
-    
+
     //Back Button - After clicking, this GUI gets closed and the previous GUI
     //              is opened again via a new instance
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
@@ -280,14 +322,39 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_RefreshButtonActionPerformed
+
+    private void ExamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExamsActionPerformed
+
+        if (Exams.isSelected()) {
+            selectedTopic = Exams.getText();
+        }
+    }//GEN-LAST:event_ExamsActionPerformed
+
+    private void EventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EventsActionPerformed
+        // TODO add your handling code here:
+        if (Events.isSelected()) {
+            selectedTopic = Events.getText();
+        }
+    }//GEN-LAST:event_EventsActionPerformed
+
+    private void GeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GeneralActionPerformed
+        if (General.isSelected()) {
+            selectedTopic = General.getText();
+        }
+    }//GEN-LAST:event_GeneralActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JTextArea ChatArea;
     private javax.swing.JScrollPane ChatAreaScroll;
+    private javax.swing.JRadioButton Events;
+    private javax.swing.JRadioButton Exams;
+    private javax.swing.JRadioButton General;
     private javax.swing.JSeparator HorizontalLine;
     private javax.swing.JLabel NotificationTitle;
     private javax.swing.JTextArea NotificationsArea;
     private javax.swing.JScrollPane NotificationsAreaScroll;
+    private javax.swing.ButtonGroup RadioButtonGroup;
     private javax.swing.JButton RefreshButton;
     private javax.swing.JButton SendButton;
     private javax.swing.JList<String> SubscribersList;

@@ -12,6 +12,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
     //Instance variables - gives easier access to important variables across all the functions
     private SubscriberInterface sub;
     private ServiceInterface serviceImp;
+    private String selectedTopic = "General";
     private ArrayList<String> notifications = new ArrayList<>();
     private ArrayList<PublisherInterface> currentPublishers = new ArrayList<>();
     private ArrayList<PublisherInterface> availablePublishers = new ArrayList<>();
@@ -78,7 +79,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
     //              basically, getting the difference between them
     public void updateLists() throws RemoteException {
         this.availablePublishers = serviceImp.getPublishers();
-        this.notifications = sub.getNotifications();
+        this.notifications = sub.getNotifications(selectedTopic);
         this.currentPublishers = serviceImp.getSubscriptions((SubscriberInterface) sub);
 
         availablePublishers.removeAll(currentPublishers);
@@ -122,6 +123,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         PublishersTitle = new javax.swing.JLabel();
         NotificationTitle = new javax.swing.JLabel();
         PublishersSubTitle = new javax.swing.JLabel();
@@ -138,6 +140,9 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
         Refresh = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         AvailablePublishers = new javax.swing.JList<>();
+        Exams = new javax.swing.JRadioButton();
+        Events = new javax.swing.JRadioButton();
+        General = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -214,6 +219,30 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
         });
         jScrollPane1.setViewportView(AvailablePublishers);
 
+        buttonGroup1.add(Exams);
+        Exams.setText("Exams");
+        Exams.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExamsActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(Events);
+        Events.setText("Events");
+        Events.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EventsActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(General);
+        General.setText("General");
+        General.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GeneralActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -247,12 +276,19 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
                         .addComponent(NotificationTitle)
                         .addGap(132, 132, 132))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-                    .addComponent(HorizontalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(HorizontalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(Exams)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Events)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(General))
+                            .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(211, 211, 211)
@@ -285,12 +321,17 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(HorizontalLine, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Exams)
+                            .addComponent(Events)
+                            .addComponent(General))
+                        .addGap(2, 2, 2)
+                        .addComponent(NotificationsAreaScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ThankYouMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(VerticalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
+                .addComponent(VerticalLine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE))
         );
 
         pack();
@@ -373,6 +414,27 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
         }
     }//GEN-LAST:event_RefreshActionPerformed
 
+    private void ExamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExamsActionPerformed
+        // TODO add your handling code here:
+        if (Exams.isSelected()) {
+            selectedTopic = Exams.getText(); 
+        }
+    }//GEN-LAST:event_ExamsActionPerformed
+
+    private void EventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EventsActionPerformed
+        // TODO add your handling code here:
+        if (Events.isSelected()) {
+            selectedTopic = Events.getText(); 
+        }
+    }//GEN-LAST:event_EventsActionPerformed
+
+    private void GeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GeneralActionPerformed
+        // TODO add your handling code here:
+        if (General.isSelected()) {
+            selectedTopic = General.getText(); 
+        }
+    }//GEN-LAST:event_GeneralActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> AvailablePublishers;
     private javax.swing.JLabel AvaliablePublishersSubTitle;
@@ -380,6 +442,9 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
     private javax.swing.JButton BackButton;
     private javax.swing.JList<String> CurrentPublishers;
     private javax.swing.JScrollPane CurrentPublishersScroll;
+    private javax.swing.JRadioButton Events;
+    private javax.swing.JRadioButton Exams;
+    private javax.swing.JRadioButton General;
     private javax.swing.JSeparator HorizontalLine;
     private javax.swing.JLabel NotificationTitle;
     private javax.swing.JTextArea NotificationsArea;
@@ -389,6 +454,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberN
     private javax.swing.JButton Refresh;
     private javax.swing.JLabel ThankYouMessage;
     private javax.swing.JSeparator VerticalLine;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

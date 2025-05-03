@@ -39,7 +39,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     public int getNumberOfSubscribers(String name) {
         String keyPub = name + "#";
         ArrayList<SubscriberInterface> subscribers = publisherSubscribers.get(keyPub);
-        
+
         if (subscribers == null) {
             return 0;
         } else {
@@ -56,7 +56,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     public String getPublisherKey(PublisherInterface pub) throws RemoteException {
         return pub.getName() + "#";
     }
-    
+
     //getSubscriberKey - Returns the [String Key] of the subscriber
     public String getSubscriberKey(SubscriberInterface sub) throws RemoteException {
         return sub.getName() + "#" + sub.getId();
@@ -95,11 +95,11 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     @Override
     public void registerPublisher(PublisherInterface pub) throws RemoteException {
         String keyPub = getPublisherKey(pub);
-        
+
         if (!publishers.containsKey(keyPub)) {
             this.publishers.put(keyPub, pub);
         }
-        
+
         GUI.updateGUI();
     }
 
@@ -109,11 +109,11 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     @Override
     public void registerSubscriber(SubscriberInterface sub) throws RemoteException {
         String keySub = getSubscriberKey(sub);
-        
+
         if (!subscribers.containsKey(keySub)) {
             this.subscribers.put(keySub, sub);
         }
-        
+
         GUI.updateGUI();
     }
 
@@ -142,7 +142,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
             this.publisherSubscribers.put(keyPub, new ArrayList<>());
         }
         this.publisherSubscribers.get(keyPub).add(sub);
-        
+
         GUI.updateGUI();
     }
 
@@ -154,7 +154,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     public void unsubscribe(SubscriberInterface sub, PublisherInterface pub) throws RemoteException {
         String keySub = getSubscriberKey(sub);
         String keyPub = getPublisherKey(pub);
-        
+
         if (subscriptions.containsKey(keySub)) {
             if (subscriptions.get(keySub).contains(pub)) {
                 this.subscriptions.get(keySub).remove(pub);
@@ -166,21 +166,21 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
                 this.publisherSubscribers.get(keyPub).remove(sub);
             }
         }
-        
+
         GUI.updateGUI();
     }
 
     //sendNotification - This function is responsible for sending notifications from publishers to
     //                   only the subscribed subscribers for this publisher
     @Override
-    public void sendNotification(PublisherInterface pub, String notification) throws RemoteException {
+    public void sendNotification(PublisherInterface pub, String topic, String notification) throws RemoteException {
         String keyPub = getPublisherKey(pub);
 
         ArrayList<SubscriberInterface> Subscribers = publisherSubscribers.get(keyPub);
 
         if (Subscribers != null) {
             for (int i = 0; i < Subscribers.size(); i++) {
-                Subscribers.get(i).receiveNotification("[" + pub.getName() + "] " + notification);
+                Subscribers.get(i).receiveNotification(topic, "[" + pub.getName() + "] " + notification);
             }
         }
     }
@@ -189,7 +189,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     @Override
     public ArrayList<PublisherInterface> getSubscriptions(SubscriberInterface sub) throws RemoteException {
         String keySub = getSubscriberKey(sub);
-        
+
         if (subscriptions.containsKey(keySub)) {
             return subscriptions.get(keySub);
         } else {
@@ -201,7 +201,7 @@ public class ServiceImplementation extends UnicastRemoteObject implements Servic
     @Override
     public ArrayList<SubscriberInterface> getPublisherSubscribers(PublisherInterface pub) throws RemoteException {
         String keyPub = getPublisherKey(pub);
-        
+
         if (publisherSubscribers.containsKey(keyPub)) {
             return publisherSubscribers.get(keyPub);
         } else {

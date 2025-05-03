@@ -9,6 +9,6 @@ import java.rmi.RemoteException;
 public interface SubscriberInterface extends Remote {
     public int getId() throws RemoteException;
     public String getName() throws RemoteException;
-    public ArrayList<String> getNotifications() throws RemoteException;
-    public void receiveNotification(String notification) throws RemoteException;
+    public ArrayList<String> getNotifications(String topic) throws RemoteException;
+    public void receiveNotification(String topic, String notification) throws RemoteException;
 }

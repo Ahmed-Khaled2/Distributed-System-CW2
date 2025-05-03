@@ -1,5 +1,7 @@
 package Subscriber;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,7 +12,7 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
     //ArrayList - List to store received notifications
     private int id;
     private String name;
-    private ArrayList<String> notifications = new ArrayList<>();
+    private Map<String, ArrayList<String>> notifications = new HashMap<>();
     private transient SubscriberNotificationListener Listener;
 
     //Loaded Constructor - Initializes subscriber with their name and ID
@@ -37,15 +39,18 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
     
     //getNotifications - returns a list of all recevied notifications
     @Override
-    public ArrayList<String> getNotifications() throws RemoteException {
-        return notifications;
+    public ArrayList<String> getNotifications(String topic) throws RemoteException {
+       return notifications.getOrDefault(topic, new ArrayList<>());
     }
     
     //receiveNotification - Called remotely by the Service when a new notification is sent
     //                      to a subscriber, then the notification is stored in 'notifications'
     @Override
-    public void receiveNotification(String notification) throws RemoteException {
-        notifications.add(notification);
+    public void receiveNotification(String topic, String notification) throws RemoteException {
+        if (!notifications.containsKey(topic)) {
+            notifications.put(topic, new ArrayList<>());
+        }
+        notifications.get(topic).add(notification);
         if (Listener != null){
             Listener.onNotification();
         }
