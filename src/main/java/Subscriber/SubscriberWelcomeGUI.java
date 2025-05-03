@@ -172,6 +172,11 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
                 }
 
                 SubscriberMainGUI SMGUI = new SubscriberMainGUI(service, sub);
+                
+                if (sub instanceof Subscriber){
+                    ((Subscriber) sub).setListener(SMGUI);
+                }
+                
                 SMGUI.setVisible(true);
                 this.dispose();
 

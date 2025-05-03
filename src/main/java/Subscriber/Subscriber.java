@@ -11,11 +11,16 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
     private int id;
     private String name;
     private ArrayList<String> notifications = new ArrayList<>();
+    private transient SubscriberNotificationListener Listener;
 
     //Loaded Constructor - Initializes subscriber with their name and ID
     public Subscriber(String name, int id) throws RemoteException {
         this.id = id;
         this.name = name;
+    }
+    
+    public void setListener(SubscriberNotificationListener Listener){
+        this.Listener = Listener;
     }
 
     //getID - returns the id of the subscriber 
@@ -41,5 +46,8 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
     @Override
     public void receiveNotification(String notification) throws RemoteException {
         notifications.add(notification);
+        if (Listener != null){
+            Listener.onNotification();
+        }
     }
 }

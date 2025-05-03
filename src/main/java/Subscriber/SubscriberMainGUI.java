@@ -5,8 +5,9 @@ import javax.swing.JOptionPane;
 import java.rmi.RemoteException;
 import MainService.ServiceInterface;
 import Publisher.PublisherInterface;
+import java.rmi.server.UnicastRemoteObject;
 
-public class SubscriberMainGUI extends javax.swing.JFrame {
+public class SubscriberMainGUI extends javax.swing.JFrame implements SubscriberNotificationListener {
 
     //Instance variables - gives easier access to important variables across all the functions
     private SubscriberInterface sub;
@@ -26,6 +27,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
+        UnicastRemoteObject.exportObject(this, 0);
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
@@ -46,6 +48,11 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         updateCurrentPublishers();
         updateAvailablePublishers();
         updateNotifications();
+    }
+    
+    @Override
+    public void onNotification() throws RemoteException{
+        updateGUI();
     }
 
     //updateNotifications - This functions updates the list of recieved notifications 
@@ -365,6 +372,7 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_RefreshActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> AvailablePublishers;
     private javax.swing.JLabel AvaliablePublishersSubTitle;

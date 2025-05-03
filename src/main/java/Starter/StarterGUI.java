@@ -99,14 +99,6 @@ public class StarterGUI extends javax.swing.JFrame {
         SWGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_UserButtonActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StarterGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton PublisherButton;
     private javax.swing.JLabel Title;
