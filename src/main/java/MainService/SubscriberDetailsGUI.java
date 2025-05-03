@@ -22,8 +22,8 @@ public class SubscriberDetailsGUI extends javax.swing.JFrame {
     //updateGUI() - Initializes the instance variables and updates the GUI
     public SubscriberDetailsGUI(ServiceImplementation obj, String subscriberName, int subscriberID) throws RemoteException {
         initComponents();
-        setLocationRelativeTo(null);
         setResizable(false);
+        setLocationRelativeTo(null);
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
@@ -31,11 +31,12 @@ public class SubscriberDetailsGUI extends javax.swing.JFrame {
         }
 
         this.ServiceImp = obj;
-        this.name = subscriberName;
         this.id = subscriberID;
+        this.name = subscriberName;
 
-        Name.setText("Subscriber Name: " + name);
+        
         ID.setText("Subscriber ID: " + id);
+        Name.setText("Subscriber Name: " + name);
 
         updatePublishers();
     }

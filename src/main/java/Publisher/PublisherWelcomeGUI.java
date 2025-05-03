@@ -1,10 +1,10 @@
 package Publisher;
 
 import Starter.StarterGUI;
+import javax.swing.JOptionPane;
+import java.rmi.registry.Registry;
 import MainService.ServiceInterface;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import javax.swing.JOptionPane;
 
 public class PublisherWelcomeGUI extends javax.swing.JFrame {
 

@@ -17,11 +17,10 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
         this.name = name;
     }
 
-    //saveNotification - Called remotely by the Service when a new notification is sent
-    //                   by a publisher, then the notification is stored in 'notifications'
+    //getName - returns the name of the publisher 
     @Override
-    public void saveNotification(String notification) throws RemoteException {
-        notifications.add(notification);
+    public String getName() throws RemoteException {
+        return name;
     }
 
     //getNotifications - returns a list of all sent notifications
@@ -30,9 +29,10 @@ public class Publisher extends UnicastRemoteObject implements PublisherInterface
         return notifications;
     }
 
-    //getName - returns the name of the publisher 
+    //saveNotification - Called remotely by the Service when a new notification is sent
+    //                   by a publisher, then the notification is stored in 'notifications'
     @Override
-    public String getName() throws RemoteException {
-        return name;
+    public void saveNotification(String notification) throws RemoteException {
+        notifications.add(notification);
     }
 }

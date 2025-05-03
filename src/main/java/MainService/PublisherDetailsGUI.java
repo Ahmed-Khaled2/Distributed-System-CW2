@@ -21,8 +21,8 @@ public class PublisherDetailsGUI extends javax.swing.JFrame {
     //updateGUI() - Initializes the instance variables and updates the GUI
     public PublisherDetailsGUI(ServiceImplementation serviceImp, String publisherName, int numberOfSubscribres) throws RemoteException {
         initComponents();
-        setLocationRelativeTo(null);
         setResizable(false);
+        setLocationRelativeTo(null);
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());

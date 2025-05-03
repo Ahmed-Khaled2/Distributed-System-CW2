@@ -1,10 +1,10 @@
 package Subscriber;
 
 import Starter.StarterGUI;
+import javax.swing.JOptionPane;
+import java.rmi.registry.Registry;
 import MainService.ServiceInterface;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import javax.swing.JOptionPane;
 
 public class SubscriberWelcomeGUI extends javax.swing.JFrame {
 
@@ -15,8 +15,8 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
     //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
     public SubscriberWelcomeGUI() {
         initComponents();
-        setLocationRelativeTo(null);
         setResizable(false);
+        setLocationRelativeTo(null);
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());

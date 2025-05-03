@@ -1,9 +1,9 @@
 package Publisher;
 
+import java.util.ArrayList;
+import java.rmi.RemoteException;
 import MainService.ServiceInterface;
 import Subscriber.SubscriberInterface;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 public class PublisherMainGUI extends javax.swing.JFrame {
 
@@ -22,8 +22,8 @@ public class PublisherMainGUI extends javax.swing.JFrame {
     //updateGUI() - Initializes the instance variables and updates the GUI
     public PublisherMainGUI(ServiceInterface serviceImp, PublisherInterface pub) throws RemoteException {
         initComponents();
-        setLocationRelativeTo(null);
         setResizable(false);
+        setLocationRelativeTo(null);
         
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());

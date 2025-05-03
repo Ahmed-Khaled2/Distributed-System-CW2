@@ -1,10 +1,10 @@
 package Subscriber;
 
-import MainService.ServiceInterface;
-import Publisher.PublisherInterface;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.rmi.RemoteException;
+import MainService.ServiceInterface;
+import Publisher.PublisherInterface;
 
 public class SubscriberMainGUI extends javax.swing.JFrame {
 
@@ -24,8 +24,8 @@ public class SubscriberMainGUI extends javax.swing.JFrame {
     //updateGUI() - Initializes the instance variables and updates the GUI
     public SubscriberMainGUI(ServiceInterface serviceImp, SubscriberInterface sub) throws RemoteException {
         initComponents();
-        setLocationRelativeTo(null);
         setResizable(false);
+        setLocationRelativeTo(null);
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
