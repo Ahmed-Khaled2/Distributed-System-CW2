@@ -24,7 +24,8 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
         }
     }
 
-    //Helper function - Checks if a string contains integers or not
+    //isInteger - Is a helper function that checks if a string contains 
+    //            integers or not and returns a boolean value
     private boolean isInteger(String input) {
         try {
             Integer.valueOf(input);
@@ -82,7 +83,7 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -99,7 +100,7 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,15 +132,15 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
     //               objects are registered
     //LocateRegistry.getRegistry() - Connects to the RMI registry on 'localhost'
     //                               at port '1099'
-    //SubscriberInterface service - Creats an object of type SubscriberInterface, this
-    //                              is the object that can call remote methods
+    //ServiceInterface service - Creats an object of type SubscriberInterface,
+    //                           this is the object that can call remote methods
     //reg.lookup("NotificationSystem") - Looks up the remote object named 
     //                                   "NotificationSystem" from the RMI
     //SubscriberInterface sub - Local object of Subscriber
     //if-else block - calls the hasSubscriber() function to check if the user exists
     //                If they exit, the 'sub' will be assigned with the stored user
     //                object from the service side. Else a new object will be registered
-    //                using registerSubscriber() function
+    //                using registerSubscriber function
     //SubscriberMainGUI SMGUI - A GUI of type SubscriberMainGUI [Which opens the main GUI
     //                          for the subscriber] is created and Initialized with an
     //                          instance of the 'service' [Remote Object] and 'sub' subscriber
@@ -175,6 +176,7 @@ public class SubscriberWelcomeGUI extends javax.swing.JFrame {
                 this.dispose();
 
             } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "The Server is not online yet, please wait.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_LoginButtonActionPerformed

@@ -12,7 +12,7 @@ public class Subscriber extends UnicastRemoteObject implements SubscriberInterfa
     private int id;
     private ArrayList<String> notifications = new ArrayList<>();
 
-    //Loaded Constructor - Initializes subscriber with name and ID
+    //Loaded Constructor - Initializes subscriber with their name and ID
     public Subscriber(String name, int id) throws RemoteException {
         this.name = name;
         this.id = id;

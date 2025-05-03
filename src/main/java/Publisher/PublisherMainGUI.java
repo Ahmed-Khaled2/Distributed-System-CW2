@@ -7,49 +7,79 @@ import java.util.ArrayList;
 
 public class PublisherMainGUI extends javax.swing.JFrame {
 
-    private ServiceInterface obj;
-    private PublisherInterface Pub;
+    //Instance variables - gives easier access to important variables across all the functions
+    private PublisherInterface pub;
+    private ServiceInterface serviceImp;
     private ArrayList<String> notifications = new ArrayList<>();
     private ArrayList<SubscriberInterface> subscribers = new ArrayList<>();
 
-    public PublisherMainGUI() {
+    //Loaded Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //setText() - Initializes the text field responsle for the [Thank you message]
+    //updateGUI() - Initializes the instance variables and updates the GUI
+    public PublisherMainGUI(ServiceInterface serviceImp, PublisherInterface pub) throws RemoteException {
         initComponents();
-    }
-
-    public PublisherMainGUI(ServiceInterface obj, PublisherInterface Pub) throws RemoteException {
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        this.obj = obj;
-        this.Pub = Pub;
-        ThankYouMessage.setText("Thank you for using our notification system, " + Pub.getName() + "!");
+        
+        this.pub = pub;
+        this.serviceImp = serviceImp;
+        ThankYouMessage.setText("Thank you for using our notification system, " + pub.getName() + "!");
+        
         updateGUI();
     }
-
+    //updateGUI - Is responsible for calling [updateSubscribersList and updateNotifications]
+    //            functions which update the entire GUI
     public void updateGUI() throws RemoteException {
         updateNotifications();
         updateSubscribersList();
     }
 
+    //updateNotifications - This functions updates the list of sent notifications,
+    //                      first getNotifications is called to fetch the latest 
+    //                      notifications then displayed by creating a StringBuilder
+    //                      which helps format the string then a for-loop is called
+    //for-loop block - Iteraters over all the notifications and append them to the 'sb'
+    //                 string followed by a new line
+    //setText() - This function passes the created string to the component on the GUI
     public void updateNotifications() throws RemoteException {
-        notifications = Pub.getNotifications();
+        notifications = pub.getNotifications();
+        
         StringBuilder sb = new StringBuilder();
+        
         for (int i = 0; i < notifications.size(); i++) {
             sb.append(notifications.get(i)).append("\n");
         }
+        
         NotificationsArea.setText(sb.toString());
     }
 
+    //updateSubscribersList - This functions updates the list of the users
+    //                        who are subscribed to this publisher, first
+    //                        getPublisherSubscribers is called to fetch the
+    //                        latest list of subscribers then displayed by
+    //                        creating a list of String with similar size
+    //                        as 'subscribers', then a for-loop is called
+    //for-loop block - Iteraters over all the subscribed subscribers and gets 
+    //                 their name, then these names are stored in the String list
+    //setListData() - This function passes the created list to the component on the GUI
     public void updateSubscribersList() throws RemoteException {
-        this.subscribers = obj.getPublisherSubscribers(Pub);
+        this.subscribers = serviceImp.getPublisherSubscribers(pub);
+        
         String[] subscribersList = new String[subscribers.size()];
+        
         for (int i = 0; i < subscribers.size(); i++) {
             subscribersList[i] = subscribers.get(i).getName();
         }
+        
         SubscribersList.setListData(subscribersList);
     }
 
@@ -217,36 +247,39 @@ public class PublisherMainGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Send Button - After clicking, the message wrote in the 'ChartArea' is fetched
+    //              and stored in the publisher's arraylist of notifications, after
+    //              that sendNotification function is called to send the notificaion
+    //              to all the subscribers who are subscribed to this publisher. Lastly,
+    //              updateNotifications is called
+    //setText() - Clears the 'ChatArea' for easier usage after sending
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendButtonActionPerformed
         try {
-            Pub.saveNotification(ChatArea.getText());
-            obj.sendNotification(Pub, ChatArea.getText());
+            pub.saveNotification(ChatArea.getText());
+            serviceImp.sendNotification(pub, ChatArea.getText());
+            
             updateNotifications();
             ChatArea.setText(null);
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_SendButtonActionPerformed
-
+    
+    //Back Button - After clicking, this GUI gets closed and the previous GUI
+    //              is opened again via a new instance
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         PublisherWelcomeGUI PWGUI = new PublisherWelcomeGUI();
         PWGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
+    //Refresh Button - After clicking, updateSubscribersList() function is called 
+    //                 which updates the list of subscribers in the GUI including
     private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
         try {
             updateSubscribersList();
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_RefreshButtonActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PublisherMainGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JTextArea ChatArea;

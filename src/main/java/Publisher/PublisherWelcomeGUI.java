@@ -1,6 +1,5 @@
 package Publisher;
 
-import Publisher.*;
 import Starter.StarterGUI;
 import MainService.ServiceInterface;
 import java.rmi.registry.LocateRegistry;
@@ -9,14 +8,20 @@ import javax.swing.JOptionPane;
 
 public class PublisherWelcomeGUI extends javax.swing.JFrame {
 
+    //Default Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
     public PublisherWelcomeGUI() {
+        initComponents();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setResizable(false);
-        setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -43,6 +48,7 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
         });
 
         Title.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Title.setText("Welcome Publisher");
 
         NameLabel.setText("Name:");
@@ -63,21 +69,19 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
                         .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LoginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
                         .addComponent(NameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(NameField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Title)
-                .addGap(42, 42, 42))
+                .addContainerGap(28, Short.MAX_VALUE))
+            .addComponent(Title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,24 +102,47 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Login Button - After clicking the button, the function verifies the inputs
+    //               match the requied paramers. By ensuring they are not empty
+    //Registry reg - Creats an object of type Registry, this is where the remote
+    //               objects are registered
+    //LocateRegistry.getRegistry() - Connects to the RMI registry on 'localhost'
+    //                               at port '1099'
+    //ServiceInterface service - Creats an object of type SubscriberInterface, this
+    //                              is the object that can call remote methods
+    //reg.lookup("NotificationSystem") - Looks up the remote object named 
+    //                                   "NotificationSystem" from the RMI
+    //PublisherInterface pub - Local object of Publisher
+    //if-else block - calls the hasPublisher() function to check if the publisher exists
+    //                If they exit, the 'pub' will be assigned with the stored publisher
+    //                object from the service side. Else a new object will be registered
+    //                using registerPublisher function
+    //PublisherMainGUI PMGUI - A GUI of type PublisherMainGUI [Which opens the main GUI
+    //                          for the publisher] is created and Initialized with an
+    //                          instance of the 'service' [Remote Object] and 'pub' publisher
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
         if (NameField.getText().isEmpty()) {
             if (NameField.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please, enter your name.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
+            
             String name = NameField.getText();
+            
             try {
                 Registry reg = LocateRegistry.getRegistry("localhost", 1099);
-                ServiceInterface obj = (ServiceInterface) reg.lookup("NotificationSystem");
+                ServiceInterface service = (ServiceInterface) reg.lookup("NotificationSystem");
+                
                 PublisherInterface pub;
-                if (obj.hasPublisher(name)) {
-                    pub = obj.getPublisher(name);
+                
+                if (service.hasPublisher(name)) {
+                    pub = service.getPublisher(name);
                 } else {
                     pub = new Publisher(name);
-                    obj.registerPublisher(pub);
+                    service.registerPublisher(pub);
                 }
-                PublisherMainGUI PMGUI = new PublisherMainGUI(obj, pub);
+                
+                PublisherMainGUI PMGUI = new PublisherMainGUI(service, pub);
                 PMGUI.setVisible(true);
                 this.dispose();
 
@@ -125,6 +152,8 @@ public class PublisherWelcomeGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_LoginButtonActionPerformed
 
+    //Back Button - After clicking, this GUI gets closed and the previous GUI
+    //              is opened again via a new instance
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         StarterGUI SGUI = new StarterGUI();
         SGUI.setVisible(true);
