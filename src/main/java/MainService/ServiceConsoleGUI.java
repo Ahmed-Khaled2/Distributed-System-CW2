@@ -1,62 +1,90 @@
 package MainService;
 
+import java.util.ArrayList;
+import java.rmi.RemoteException;
 import Publisher.PublisherInterface;
 import Subscriber.SubscriberInterface;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 public class ServiceConsoleGUI extends javax.swing.JFrame {
 
-    private ServiceImplementation ServiceImp;
-    private ArrayList<SubscriberInterface> Subscribers;
-    private ArrayList<PublisherInterface> Publishers;
+    //Instance variables - gives easier access to important variables across all the functions
+    private ServiceImplementation serviceImp;
+    private ArrayList<PublisherInterface> publishers;
+    private ArrayList<SubscriberInterface> subscribers;
 
-    public ServiceConsoleGUI() {
+    //Loaded Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //updateGUI() - Initializes the instance variables and updates the GUI
+    public ServiceConsoleGUI(ServiceImplementation serviceImp) throws RemoteException {
         initComponents();
-    }
-
-    public ServiceConsoleGUI(ServiceImplementation ServiceImp) throws RemoteException {
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        this.ServiceImp = ServiceImp;
+        
+        this.serviceImp = serviceImp;
+        
         updateGUI();
     }
-
+    
+    //updateGUI - Is responsible for calling [updateList, updateUserTable,
+    //            and updatePublisherTable] functions which update the entire
+    //            GUI and necessary variables 
     public void updateGUI() throws RemoteException {
-        UpdateList();
-        UpdateUserTable();
-        UpdatePublisherTable();
+        updateList();
+        updateUserTable();
+        updatePublisherTable();
     }
 
-    public void UpdateList() throws RemoteException {
-        this.Subscribers = ServiceImp.getSubscribers();
-        this.Publishers = ServiceImp.getPublishers();
+    //updateLists - Initializes [subscribers and publishers] by using
+    //              [getSubscribers, getPublishers] functions via the remote object
+    public void updateList() throws RemoteException {
+        this.subscribers = serviceImp.getSubscribers();
+        this.publishers = serviceImp.getPublishers();
     }
 
-    public void UpdateUserTable() throws RemoteException {
+    //updateUserTable - This function updates the table of the all the 
+    //                  registered subscribers
+    //DefaultTableModel - Gets the current table model from the GUI
+    //model.setRowCount() - Clear all the existing rows from the table
+    //for-loop block - Iteraters over all the registered subscribers and 
+    //                 gets their name and id
+    //model.addRow() - Adds a new row to the table with the subscriber's 
+    //                 name and id
+    public void updateUserTable() throws RemoteException {
         DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < Subscribers.size(); i++) {
-            String Name = Subscribers.get(i).getName();
-            int ID = Subscribers.get(i).getId();
+        for (int i = 0; i < subscribers.size(); i++) {
+            String Name = subscribers.get(i).getName();
+            int ID = subscribers.get(i).getId();
+            
             model.addRow(new Object[]{Name, ID});
         }
     }
 
-    public void UpdatePublisherTable() throws RemoteException {
+    //updatePublisherTable - This function updates the table of the all the 
+    //                       registered publishers
+    //DefaultTableModel - Gets the current table model from the GUI
+    //model.setRowCount() - Clear all the existing rows from the table
+    //for-loop block - Iteraters over all the registered publishers and 
+    //                 gets their name
+    //model.addRow() - Adds a new row to the table with the publishers's name
+    public void updatePublisherTable() throws RemoteException {
         DefaultTableModel model = (DefaultTableModel) PublishersTable.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < Publishers.size(); i++) {
-            String Name = Publishers.get(i).getName();
-            int NumberOfSubscribers = ServiceImp.getNumberOfSubscribers(Publishers.get(i).getName());
+        for (int i = 0; i < publishers.size(); i++) {
+            String Name = publishers.get(i).getName();
+            int NumberOfSubscribers = serviceImp.getNumberOfSubscribers(publishers.get(i).getName());
+            
             model.addRow(new Object[]{Name, NumberOfSubscribers});
         }
     }
@@ -221,35 +249,36 @@ public class ServiceConsoleGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Selecting A User - After clicking on a user, their name and id are fetched
+    //                   from the table's row and stored in 'subName' and 'subID'
+    //SubscriberDetailsGUI SDGUI - Opens the subscriber details GUI and passes the
+    //                             remote object 'serviceImp', 'subName', and 'subID'
     private void UsersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UsersTableMouseClicked
-        String SubName = UsersTable.getValueAt(UsersTable.getSelectedRow(), 0).toString();
-        int SubID = (Integer) UsersTable.getValueAt(UsersTable.getSelectedRow(), 1);
+        String subName = UsersTable.getValueAt(UsersTable.getSelectedRow(), 0).toString();
+        int subID = (Integer) UsersTable.getValueAt(UsersTable.getSelectedRow(), 1);
+        
         try {
-            SubscriberDetailsGUI SDGUI = new SubscriberDetailsGUI(ServiceImp, SubName, SubID);
+            SubscriberDetailsGUI SDGUI = new SubscriberDetailsGUI(serviceImp, subName, subID);
             SDGUI.setVisible(true);
         } catch (RemoteException ex) {
         }
     }//GEN-LAST:event_UsersTableMouseClicked
 
+    //Selecting A Publisher - After clicking on a publisher, their name and number of
+    //                        subscribers are fetched from the table's row and stored
+    //                        in 'pubName' and 'numberOfSubscribers'
+    //PublisherDetailsGUI PDGUI - Opens the publisher details GUI and passes the remote
+    //                            object 'serviceImp', 'subName', and 'numberOfSubscribers'
     private void PublishersTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PublishersTableMouseClicked
-        String PubName = PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 0).toString();
-        int NumberOfSubscribers = (Integer) PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 1); 
+        String pubName = PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 0).toString();
+        int numberOfSubscribers = (Integer) PublishersTable.getValueAt(PublishersTable.getSelectedRow(), 1);
+        
         try {
-            PublisherDetailsGUI PDGUI = new PublisherDetailsGUI(ServiceImp, PubName, NumberOfSubscribers);
+            PublisherDetailsGUI PDGUI = new PublisherDetailsGUI(serviceImp, pubName, numberOfSubscribers);
             PDGUI.setVisible(true);
         } catch (RemoteException ex) {
         }
-        
     }//GEN-LAST:event_PublishersTableMouseClicked
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ServiceConsoleGUI().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PublisherSubTitle;
     private javax.swing.JLabel PublisherTitle;

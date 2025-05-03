@@ -1,43 +1,61 @@
 package MainService;
 
-import Subscriber.SubscriberInterface;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.rmi.RemoteException;
+import Subscriber.SubscriberInterface;
 import javax.swing.table.DefaultTableModel;
 
 public class PublisherDetailsGUI extends javax.swing.JFrame {
 
-    private String PublisherName;
-    private ServiceImplementation ServiceImp;
-    private ArrayList<SubscriberInterface> Subscribers;
-    
-    public PublisherDetailsGUI() {
-        
-    }
-    
-    public PublisherDetailsGUI(ServiceImplementation obj, String PublisherName, int NumberOfSubscribres) throws RemoteException {
+    //Instance variables - gives easier access to important variables across all the functions
+    private String publisherName;
+    private ServiceImplementation serviceImp;
+    private ArrayList<SubscriberInterface> subscribers;
+
+    //Loaded Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //setText() - Initializes the text field responsle for the publishers's name and number of subscribers
+    //updateGUI() - Initializes the instance variables and updates the GUI
+    public PublisherDetailsGUI(ServiceImplementation serviceImp, String publisherName, int numberOfSubscribres) throws RemoteException {
+        initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        this.ServiceImp = obj;
-        this.PublisherName = PublisherName;
-        Name.setText("Publisher Name: " + PublisherName);
-        NumberOfSubscribers.setText("Number of Subscribers: " + NumberOfSubscribres);
-        setResizable(false);
-        UpdateSubscribers();
+
+        this.serviceImp = serviceImp;
+        this.publisherName = publisherName;
+
+        Name.setText("Publisher Name: " + publisherName);
+        NumberOfSubscribers.setText("Number of Subscribers: " + numberOfSubscribres);
+
+        updateSubscribers();
     }
-    
-    public void UpdateSubscribers() throws RemoteException{
-        this.Subscribers = ServiceImp.getPublisherSubscribers(ServiceImp.getPublisher(PublisherName));
-        
+
+    //updateSubscribers - This function updates the table of the subscribers that
+    //                    are subscribered to this publisher
+    //getPublisherSubscribers - Gets the list of all subscribers that are subscribered
+    //                          to this publisher
+    //DefaultTableModel - Gets the current table model from the GUI
+    //model.setRowCount() - Clear all the existing rows from the table
+    //for-loop block - Iteraters over all the subscribers and gets their name and id
+    //model.addRow() - Adds a new row to the table with the subscriber's name and id
+    public void updateSubscribers() throws RemoteException {
+        this.subscribers = serviceImp.getPublisherSubscribers(serviceImp.getPublisher(publisherName));
+
         DefaultTableModel model = (DefaultTableModel) ListOfSubscribers.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < Subscribers.size(); i++) {
-            String Name = Subscribers.get(i).getName();
-            int ID = Subscribers.get(i).getId();
+        for (int i = 0; i < subscribers.size(); i++) {
+            String Name = subscribers.get(i).getName();
+            int ID = subscribers.get(i).getId();
+
             model.addRow(new Object[]{Name, ID});
         }
     }
@@ -148,18 +166,11 @@ public class PublisherDetailsGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+//Exit Button - After clicking, this GUI gets closed
     private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_ExitButtonActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PublisherDetailsGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ExitButton;
     private javax.swing.JTable ListOfSubscribers;

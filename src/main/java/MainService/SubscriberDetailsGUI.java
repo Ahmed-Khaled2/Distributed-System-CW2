@@ -1,50 +1,68 @@
 package MainService;
 
-import Publisher.PublisherInterface;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.rmi.RemoteException;
+import Publisher.PublisherInterface;
 import javax.swing.table.DefaultTableModel;
 
 public class SubscriberDetailsGUI extends javax.swing.JFrame {
 
-    private ServiceImplementation ServiceImp;
-    private String name;
+    //Instance variables - gives easier access to important variables across all the functions
     private int id;
+    private String name;
+    private ServiceImplementation ServiceImp;
     private ArrayList<PublisherInterface> Publishers;
 
-    public SubscriberDetailsGUI() {
-
-    }
-
+    //Loaded Constructor - Initializes the GUI with required components
+    //initComponents() - Generates GUI component's code and properties
+    //setLocationRelativeTo(null) - Center the GUI on the screen
+    //setResizable(false) - Disable resizing of the GUI
+    //javax.swing.UIManager.setLookAndFeel() - Improves the UI of the GUI components by matching the system's UI
+    //setText() - Initializes the text field responsle for the subscriber's name and id
+    //updateGUI() - Initializes the instance variables and updates the GUI
     public SubscriberDetailsGUI(ServiceImplementation obj, String subscriberName, int subscriberID) throws RemoteException {
+        initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        initComponents();
-        setLocationRelativeTo(null);
-        setResizable(false);
+
         this.ServiceImp = obj;
         this.name = subscriberName;
         this.id = subscriberID;
+
         Name.setText("Subscriber Name: " + name);
         ID.setText("Subscriber ID: " + id);
-        UpdatePublishers();
+
+        updatePublishers();
     }
 
-    public void UpdatePublishers() throws RemoteException {
+    //updatePublishers - This function updates the table of the publishers that
+    //                   this subscriber is subscribed to
+    //getSubscriptions - Gets the list of all subscribed to publishers
+    //DefaultTableModel - Gets the current table model from the GUI
+    //model.setRowCount() - Clear all the existing rows from the table
+    //for-loop block - Iteraters over all the publishers and gets their name and
+    //                 number of subscribers
+    //model.addRow() - Adds a new row to the table with the publisher's name and
+    //                 number of subscribers
+    public void updatePublishers() throws RemoteException {
         this.Publishers = ServiceImp.getSubscriptions(ServiceImp.getSubscriber(name, id));
-        
+
         DefaultTableModel model = (DefaultTableModel) PublishersList.getModel();
         model.setRowCount(0);
 
         for (int i = 0; i < Publishers.size(); i++) {
             String Name = Publishers.get(i).getName();
             int NumberOfSubscribers = ServiceImp.getNumberOfSubscribers(Publishers.get(i).getName());
+
             model.addRow(new Object[]{Name, NumberOfSubscribers});
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -168,17 +186,10 @@ public class SubscriberDetailsGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Exit Button - After clicking, this GUI gets closed
     private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_ExitButtonActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SubscriberDetailsGUI().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ExitButton;
     private javax.swing.JLabel ID;
